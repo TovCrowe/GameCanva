@@ -3,25 +3,58 @@ let context = canvas.getContext("2d");
 let score = 0;
 let aliens = [];
 let bullet = null;
-let aliensKilled = 0;
+let aliensWave1 = 0;
+let aliensWave2 = 0;
+let aliensWave3 = 0;
+let aliensWave4 = 0;
+let aliensWave5 = 0;
+let alienSpeedNormal = 5
+let alienSmallSpeed = 7
+let playerHP = 10
+let waveStarted = false;
+let gameOver = false;
 let shootingSpeed = 5;
 let animateID = null;
 let shootingSpeedMax = 16;
+
+let alienImage = new Image();
+alienImage.src = "./Imagenes/enemigoNormal.png";
+
+let smallAlienImage = new Image();
+smallAlienImage.src = "./Imagenes/SmallEnemy.png";
+
+let backgroundImage = new Image();
+backgroundImage.src = "./Imagenes/R.png";
+
 canvas.addEventListener("mousedown", shoot);
 // normal alien
 class Alien {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.width = 50;
-    this.height = 50;
-    this.speed = Math.random() * 4 + 1;
+    this.width = 90;
+    this.height = 90;
+    this.speed = alienSpeedNormal;
     this.update = function () {
       // Actualizar la posición del alienígena
       this.x -= this.speed;
+      
       // Dibujar el alienígena en el canvas
-      context.fillStyle = "green";
-      context.fillRect(this.x, this.y, this.width, this.height);
+      context.drawImage(alienImage ,this.x, this.y, this.width, this.height);
+    };
+  }
+}
+class SmallAlien {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 60;
+    this.height = 60;
+    this.speed =  alienSmallSpeed;
+    this.update = function () {
+      // Actualizar la posición del alienígena
+      this.x -= this.speed;
+      context.drawImage(smallAlienImage ,this.x, this.y, this.width, this.height);
     };
   }
 }
@@ -41,37 +74,37 @@ class Bullet {
     };
   }
 }
-class SmallAlien {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.width = 30;
-    this.height = 30;
-    this.speed = Math.random() * 6 + 2;
-    this.update = function () {
-      // Actualizar la posición del alienígena
-      this.x -= this.speed;
-      context.fillStyle = "orange";
-      context.fillRect(this.x, this.y, this.width, this.height);
-    };
-  }
-}
+backgroundImage.onload = function() {
+  context.drawImage(backgroundImage, 0, 0); // Dibujar la imagen de fondo en el lienzo
+  animateID = requestAnimationFrame(gameLoop); // Iniciar el bucle del juego una vez que se haya cargado la imagen de fondo
+};
 // bucle
 function gameLoop() {
+  if (gameOver) {
+    return; // Exit the function without updating the game
+  }
   // limpiar del canva
   context.clearRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+  
   // general aliens randoms
   if (Math.random() < 0.01) {
-    var alien = new Alien(canvas.width, Math.random() * (canvas.height - 50));
+    let alien = new Alien(canvas.width, Math.random() * (canvas.height - 50));
     aliens.push(alien);
   }
+  
   if (Math.random() < 0.01) {
-    var alien = new SmallAlien(
+    let alien = new SmallAlien(
       canvas.width,
       Math.random() * (canvas.height - 50)
     );
     aliens.push(alien);
   }
+
+
+  context.fillStyle = "white";
+  context.font = "24px Arial";
+  context.fillText("HP: " + playerHP, canvas.width - 100, 30);
 
   // actualizar y general aliens
   aliens.forEach(function (alien) {
@@ -89,7 +122,11 @@ function gameLoop() {
       bullet = null;
       // score
       score++;
-      aliensKilled++;
+      aliensWave1++;
+      aliensWave2++;
+      aliensWave3++;
+      aliensWave4++;
+      aliensWave5++;
       if (shootingSpeed < shootingSpeedMax) {
         shootingSpeed++;
       }
@@ -98,19 +135,99 @@ function gameLoop() {
     // si el alien llega donde sale la bala se borre
     if (alien.x < 0) {
       aliens.splice(aliens.indexOf(alien), 1);
+      playerHP -= 1
     }
   });
   //general bala
-  if (aliensKilled >= 10) {
-    console.log(score);
+  if (aliensWave1 >= 10 && score >= 10 && score <= 20) {
+    waveStarted = true;
     animateID = cancelAnimationFrame(animateID);
     setTimeout(() => {
       animateID = requestAnimationFrame(gameLoop);
+      aliens = [];
+      aliensWave1 = 0;
     }, 3000);
-    aliens = [];
-    aliensKilled = 0;
     context.clearRect(0, 0, canvas.width, canvas.height);
+    alienSmallSpeed = 12;
+    if (waveStarted && score >= 10 && score < 20) {
+      context.fillStyle = "white";
+      context.font = "48px Arial";
+      context.fillText("OLEADA 1", canvas.width / 2 - 100, canvas.height / 2);
+    }
   }
+  
+  if (aliensWave2 >= 20 && score >= 20 && score <= 30) {
+    console.log(score);
+    waveStarted = true;
+    animateID = cancelAnimationFrame(animateID);
+    setTimeout(() => {
+      animateID = requestAnimationFrame(gameLoop);
+      aliens = [];
+      aliensWave1 = 0;
+      aliensWave2 = 0;
+    }, 3000);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    alienSmallSpeed = 16;
+    if (waveStarted && score >= 20 && score < 30) {
+      context.fillStyle = "white";
+      context.font = "48px Arial";
+      context.fillText("OLEADA 2", canvas.width / 2 - 100, canvas.height / 2);
+    }
+  }
+  
+  if (aliensWave3 >= 30 && score >= 30 && score <= 40) {
+    console.log(score);
+    waveStarted = true;
+    animateID = cancelAnimationFrame(animateID);
+    setTimeout(() => {
+      animateID = requestAnimationFrame(gameLoop);
+      aliens = [];
+      aliensWave1 = 0;
+      aliensWave2 = 0;
+      aliensWave3 = 0;
+    }, 3000);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    alienSmallSpeed = 52;
+    if (waveStarted && score >= 30 && score < 40) {
+      context.fillStyle = "white";
+      context.font = "48px Arial";
+      context.fillText("OLEADA 3", canvas.width / 2 - 100, canvas.height / 2);
+    }
+  }
+  
+  if (aliensWave4 >= 40 && score >= 40 && score <= 50) {
+    console.log(score);
+    waveStarted = true;
+    animateID = cancelAnimationFrame(animateID);
+    setTimeout(() => {
+      animateID = requestAnimationFrame(gameLoop);
+      aliens = [];
+      aliensWave1 = 0;
+      aliensWave2 = 0;
+      aliensWave3 = 0;
+      aliensWave4 = 0;
+    }, 3000);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    alienSmallSpeed = 23;
+    if (waveStarted && score >= 40 && score < 50) {
+      context.fillStyle = "white";
+      context.font = "48px Arial";
+      context.fillText("OLEADA 4", canvas.width / 2 - 100, canvas.height / 2);
+    }
+  }
+  if(playerHP <= 0) {
+    gameLocked = true
+    cancelAnimationFrame(animateID); // Stop the game loop
+    // Clear the canvas
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  
+    // Display game over message
+    context.fillStyle = "white";
+    context.font = "48px Arial";
+    context.fillText("Game Over", canvas.width / 2 - 100, canvas.height / 2);
+  }
+
+
   if (bullet) {
     bullet.update();
     //norrar la bala si no choca con nada
@@ -126,8 +243,8 @@ function gameLoop() {
   if (animateID) {
     requestAnimationFrame(gameLoop);
   }
+  
 }
-console.log(score);
 if (score >= 10) {
   console.log(score);
   animateID = cancelAnimationFrame(animateID);
@@ -141,7 +258,7 @@ if (score >= 10) {
 // disparo
 function shoot(event) {
   // SOLO puede existir una bala
-  if (!bullet) {
+  if (!bullet && !gameOver) {
     // ubicar donde esta el mouse
     let rect = canvas.getBoundingClientRect();
     let mouseY = event.clientY - rect.top;
@@ -149,6 +266,7 @@ function shoot(event) {
     bullet = new Bullet(0, mouseY);
   }
 }
+
 
 window.onload = () => {
   animateID = requestAnimationFrame(gameLoop);
