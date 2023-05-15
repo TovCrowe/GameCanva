@@ -8,8 +8,8 @@ let aliensWave2 = 0;
 let aliensWave3 = 0;
 let aliensWave4 = 0;
 let aliensWave5 = 0;
-let alienSpeedNormal = 5
-let alienSmallSpeed = 7
+let alienSpeedNormal = 1
+let alienSmallSpeed = 2
 let playerHP = 10
 let waveStarted = false;
 let gameOver = false;
@@ -24,7 +24,7 @@ let smallAlienImage = new Image();
 smallAlienImage.src = "./Imagenes/SmallEnemy.png";
 
 let backgroundImage = new Image();
-backgroundImage.src = "./Imagenes/R.png";
+backgroundImage.src = "./Imagenes/Eath.png";
 
 canvas.addEventListener("mousedown", shoot);
 // normal alien
@@ -74,26 +74,36 @@ class Bullet {
     };
   }
 }
+class Player {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 80;
+    this.height = 60;
+
+  }
+}
 backgroundImage.onload = function() {
-  context.drawImage(backgroundImage, 0, 0); // Dibujar la imagen de fondo en el lienzo
-  animateID = requestAnimationFrame(gameLoop); // Iniciar el bucle del juego una vez que se haya cargado la imagen de fondo
+  context.drawImage(backgroundImage, 0, 0); 
+  animateID = requestAnimationFrame(gameLoop); 
 };
+
 // bucle
 function gameLoop() {
   if (gameOver) {
-    return; // Exit the function without updating the game
+    return; 
   }
   // limpiar del canva
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
   
   // general aliens randoms
-  if (Math.random() < 0.01) {
+  if (Math.random() < 0.014) {
     let alien = new Alien(canvas.width, Math.random() * (canvas.height - 50));
     aliens.push(alien);
   }
   
-  if (Math.random() < 0.01) {
+  if (Math.random() < 0.014) {
     let alien = new SmallAlien(
       canvas.width,
       Math.random() * (canvas.height - 50)
@@ -102,7 +112,7 @@ function gameLoop() {
   }
 
 
-  context.fillStyle = "white";
+  context.fillStyle = "green";
   context.font = "24px Arial";
   context.fillText("HP: " + playerHP, canvas.width - 100, 30);
 
@@ -217,14 +227,12 @@ function gameLoop() {
   }
   if(playerHP <= 0) {
     gameLocked = true
-    cancelAnimationFrame(animateID); // Stop the game loop
-    // Clear the canvas
+    cancelAnimationFrame(animateID); 
     context.clearRect(0, 0, canvas.width, canvas.height);
   
-    // Display game over message
-    context.fillStyle = "white";
-    context.font = "48px Arial";
-    context.fillText("Game Over", canvas.width / 2 - 100, canvas.height / 2);
+    context.fillStyle = "red";
+    context.font = "70px Arial";
+    context.fillText("Game Over", canvas.width / 2 - 200 , canvas.height / 2);
   }
 
 
@@ -236,8 +244,8 @@ function gameLoop() {
     }
   }
   // display score
-  context.fillStyle = "white";
-  context.font = "24px Arial";
+  context.fillStyle = "WHITE";
+  context.font = "30px Arial";
   context.fillText("Puntuación: " + score, 10, 30);
   // loop
   if (animateID) {
