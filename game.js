@@ -26,6 +26,9 @@ smallAlienImage.src = "./Imagenes/SmallEnemy.png";
 let backgroundImage = new Image();
 backgroundImage.src = "./Imagenes/Eath.png";
 
+let mainSpcImage = new Image();
+mainSpcImage.src = "./Imagenes/Main.png";
+
 canvas.addEventListener("mousedown", shoot);
 // normal alien
 class Alien {
@@ -59,6 +62,8 @@ class SmallAlien {
   }
 }
 // bala
+
+// Bullet
 class Bullet {
   constructor(x, y) {
     this.x = x;
@@ -66,38 +71,73 @@ class Bullet {
     this.width = 10;
     this.height = 10;
     this.speed = shootingSpeed;
-    this.update = function () {
-      // Actualizar la posición de la bala
+    this.update = function() {
+      // Move the bullet
       this.x += this.speed;
       context.fillStyle = "red";
       context.fillRect(this.x, this.y, this.width, this.height);
     };
   }
 }
-class Player {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.width = 80;
-    this.height = 60;
+class Spaceship {
+  constructor() {
+    this.x = 50;
+    this.y = canvas.height / 2;
+    this.width = 100;
+    this.height = 50;
 
+    // Add event listener for mousemove event
+    canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
+  }
+
+  update() {
+    context.drawImage(mainSpcImage, this.x, this.y, this.width, this.height);
+  }
+
+
+  handleMouseMove(event) {
+    // Calculate the mouse position relative to the canvas
+    let rect = canvas.getBoundingClientRect();
+    let mouseY = event.clientY - rect.top;
+
+    // Update the y position of the spaceship based on the mouse position
+    this.y = mouseY - this.height / 2;
+
+    // Keep the spaceship within the bounds of the canvas
+    if (this.y < 0) {
+      this.y = 0;
+    } else if (this.y + this.height > canvas.height) {
+      this.y = canvas.height - this.height;
+    }
+  }
+
+  shootBullet() {
+    if (!bullet && !gameOver) {
+      bullet = new Bullet(this.x + this.width, this.y + this.height / 2);
+    }
   }
 }
+
 backgroundImage.onload = function() {
   context.drawImage(backgroundImage, 0, 0); 
   animateID = requestAnimationFrame(gameLoop); 
 };
+
+
+let spaceship = new Spaceship();
 
 // bucle
 function gameLoop() {
   if (gameOver) {
     return; 
   }
+  
+
   // limpiar del canva
   context.clearRect(0, 0, canvas.width, canvas.height);
-  context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-  
-  // general aliens randoms
+  context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);  // general aliens randoms
+  spaceship.update();
+
   if (Math.random() < 0.014) {
     let alien = new Alien(canvas.width, Math.random() * (canvas.height - 50));
     aliens.push(alien);
@@ -110,11 +150,6 @@ function gameLoop() {
     );
     aliens.push(alien);
   }
-
-
-  context.fillStyle = "green";
-  context.font = "24px Arial";
-  context.fillText("HP: " + playerHP, canvas.width - 100, 30);
 
   // actualizar y general aliens
   aliens.forEach(function (alien) {
@@ -141,14 +176,16 @@ function gameLoop() {
         shootingSpeed++;
       }
     }
-
     // si el alien llega donde sale la bala se borre
     if (alien.x < 0) {
       aliens.splice(aliens.indexOf(alien), 1);
       playerHP -= 1
     }
   });
-  //general bala
+  context.fillStyle = "green";
+  context.font = "24px Arial";
+  context.fillText("HP: " + playerHP, canvas.width - 100, 30);
+
   if (aliensWave1 >= 10 && score >= 10 && score <= 20) {
     waveStarted = true;
     animateID = cancelAnimationFrame(animateID);
@@ -278,4 +315,5 @@ function shoot(event) {
 
 window.onload = () => {
   animateID = requestAnimationFrame(gameLoop);
+  
 };
