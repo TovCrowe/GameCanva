@@ -188,7 +188,7 @@ function gameLoop() {
       aliensWave1 = 0;
     }, 3000);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    alienSmallSpeed = 12;
+    alienSmallSpeed = 8;
     if (waveStarted && score >= 10 && score < 20) {
       context.fillStyle = "white";
       context.font = "48px Arial";
@@ -207,7 +207,7 @@ function gameLoop() {
       aliensWave2 = 0;
     }, 3000);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    alienSmallSpeed = 16;
+    alienSmallSpeed = 10;
     if (waveStarted && score >= 20 && score < 30) {
       context.fillStyle = "white";
       context.font = "48px Arial";
@@ -227,7 +227,7 @@ function gameLoop() {
       aliensWave3 = 0;
     }, 3000);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    alienSmallSpeed = 52;
+    alienSmallSpeed = 16;
     if (waveStarted && score >= 30 && score < 40) {
       context.fillStyle = "white";
       context.font = "48px Arial";
