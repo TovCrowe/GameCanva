@@ -85,25 +85,18 @@ class Spaceship {
     this.y = canvas.height / 2;
     this.width = 100;
     this.height = 50;
-
-    // Add event listener for mousemove event
     canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
   }
-
   update() {
     context.drawImage(mainSpcImage, this.x, this.y, this.width, this.height);
   }
 
-
   handleMouseMove(event) {
-    // Calculate the mouse position relative to the canvas
     let rect = canvas.getBoundingClientRect();
     let mouseY = event.clientY - rect.top;
 
-    // Update the y position of the spaceship based on the mouse position
     this.y = mouseY - this.height / 2;
 
-    // Keep the spaceship within the bounds of the canvas
     if (this.y < 0) {
       this.y = 0;
     } else if (this.y + this.height > canvas.height) {
