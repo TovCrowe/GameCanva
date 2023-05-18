@@ -16,6 +16,7 @@ let gameOver = false;
 let shootingSpeed = 5;
 let animateID = null;
 let shootingSpeedMax = 16;
+let explosions = [];
 
 let alienImage = new Image();
 alienImage.src = "./Imagenes/enemigoNormal.png";
@@ -29,6 +30,11 @@ backgroundImage.src = "./Imagenes/Eath.png";
 let mainSpcImage = new Image();
 mainSpcImage.src = "./Imagenes/Main.png";
 
+let explosionImage = new Image();
+explosionImage.src = "./Imagenes/explosion-transparent-pixel-5.png";
+explosionImage.onload = function() {
+  animateID = requestAnimationFrame(gameLoop);
+};
 canvas.addEventListener("mousedown", shoot);
 // normal alien
 class Alien {
@@ -79,6 +85,39 @@ class Bullet {
     };
   }
 }
+class Explosion {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 75; // Adjust the width according to your explosion image
+    this.height = 75; // Adjust the height according to your explosion image
+    this.frameIndex = 0;
+    this.framesPerRow = 10; // Adjust the number of frames per row in your explosion image
+    this.frameRate = 5; // Adjust the frame rate of the explosion animation
+    this.frameCount = 0;
+    this.update = function() {
+      context.drawImage(
+        explosionImage,
+        this.frameIndex * this.width,
+        0,
+        this.width,
+        this.height,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+      this.frameCount++;
+      if (this.frameCount >= this.frameRate) {
+        this.frameIndex++;
+        this.frameCount = 0;
+      }
+      if (this.frameIndex >= this.framesPerRow) {
+        explosions.splice(explosions.indexOf(this), 1);
+      }
+    };
+  }
+}
 class Spaceship {
   constructor() {
     this.x = 50;
@@ -125,11 +164,14 @@ function gameLoop() {
     return; 
   }
   
-
+  explosions.forEach(function (explosion) {
+    explosion.update();
+  });
   // limpiar del canva
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);  // general aliens randoms
   spaceship.update();
+  
 
   if (Math.random() < 0.014) {
     let alien = new Alien(canvas.width, Math.random() * (canvas.height - 50));
@@ -159,6 +201,8 @@ function gameLoop() {
       aliens.splice(aliens.indexOf(alien), 1);
       bullet = null;
       // score
+      let explosion = new Explosion(alien.x, alien.y);
+      explosions.push(explosion);
       score++;
       aliensWave1++;
       aliensWave2++;
@@ -174,10 +218,14 @@ function gameLoop() {
       aliens.splice(aliens.indexOf(alien), 1);
       playerHP -= 1
     }
+    
   });
   context.fillStyle = "green";
   context.font = "24px Arial";
   context.fillText("HP: " + playerHP, canvas.width - 100, 30);
+  explosions.forEach(function (explosion) {
+    explosion.update();
+  });
 
   if (aliensWave1 >= 10 && score >= 10 && score <= 20) {
     waveStarted = true;
