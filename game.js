@@ -25,7 +25,7 @@ let smallAlienImage = new Image();
 smallAlienImage.src = "./Imagenes/SmallEnemy.png";
 
 let backgroundImage = new Image();
-backgroundImage.src = "./Imagenes/Eath.png";
+backgroundImage.src = "./Imagenes/Untitled.png";
 
 let mainSpcImage = new Image();
 mainSpcImage.src = "./Imagenes/Main.png";
@@ -236,7 +236,7 @@ function gameLoop() {
       aliensWave1 = 0;
     }, 3000);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    alienSmallSpeed = 8;
+    alienSmallSpeed = 4;
     if (waveStarted && score >= 10 && score < 20) {
       context.fillStyle = "white";
       context.font = "48px Arial";
@@ -255,7 +255,7 @@ function gameLoop() {
       aliensWave2 = 0;
     }, 3000);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    alienSmallSpeed = 10;
+    alienSmallSpeed = 5;
     if (waveStarted && score >= 20 && score < 30) {
       context.fillStyle = "white";
       context.font = "48px Arial";
@@ -275,7 +275,7 @@ function gameLoop() {
       aliensWave3 = 0;
     }, 3000);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    alienSmallSpeed = 16;
+    alienSmallSpeed = 7;
     if (waveStarted && score >= 30 && score < 40) {
       context.fillStyle = "white";
       context.font = "48px Arial";
@@ -296,11 +296,71 @@ function gameLoop() {
       aliensWave4 = 0;
     }, 3000);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    alienSmallSpeed = 23;
+    alienSmallSpeed = 10;
     if (waveStarted && score >= 40 && score < 50) {
       context.fillStyle = "white";
       context.font = "48px Arial";
       context.fillText("OLEADA 4", canvas.width / 2 - 100, canvas.height / 2);
+    }
+  }
+  if (aliensWave4 >= 40 && score >= 50 && score <= 60) {
+    console.log(score);
+    waveStarted = true;
+    animateID = cancelAnimationFrame(animateID);
+    setTimeout(() => {
+      animateID = requestAnimationFrame(gameLoop);
+      aliens = [];
+      aliensWave1 = 0;
+      aliensWave2 = 0;
+      aliensWave3 = 0;
+      aliensWave4 = 0;
+    }, 3000);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    alienSmallSpeed = 14;
+    if (waveStarted && score >= 40 && score < 50) {
+      context.fillStyle = "white";
+      context.font = "48px Arial";
+      context.fillText("OLEADA 5", canvas.width / 2 - 100, canvas.height / 2);
+    }
+  }
+  if (aliensWave4 >= 40 && score >= 60 && score <= 70) {
+    console.log(score);
+    waveStarted = true;
+    animateID = cancelAnimationFrame(animateID);
+    setTimeout(() => {
+      animateID = requestAnimationFrame(gameLoop);
+      aliens = [];
+      aliensWave1 = 0;
+      aliensWave2 = 0;
+      aliensWave3 = 0;
+      aliensWave4 = 0;
+    }, 3000);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    alienSmallSpeed = 16;
+    if (waveStarted && score >= 40 && score < 50) {
+      context.fillStyle = "white";
+      context.font = "48px Arial";
+      context.fillText("OLEADA 6", canvas.width / 2 - 100, canvas.height / 2);
+    }
+  }
+  if (aliensWave4 >= 40 && score >= 70 && score <= 80) {
+    console.log(score);
+    waveStarted = true;
+    animateID = cancelAnimationFrame(animateID);
+    setTimeout(() => {
+      animateID = requestAnimationFrame(gameLoop);
+      aliens = [];
+      aliensWave1 = 0;
+      aliensWave2 = 0;
+      aliensWave3 = 0;
+      aliensWave4 = 0;
+    }, 3000);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    alienSmallSpeed = 20;
+    if (waveStarted && score >= 40 && score < 50) {
+      context.fillStyle = "white";
+      context.font = "48px Arial";
+      context.fillText("OLEADA 7", canvas.width / 2 - 100, canvas.height / 2);
     }
   }
   if(playerHP <= 0) {
