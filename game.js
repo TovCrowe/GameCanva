@@ -15,7 +15,7 @@ let waveStarted = false;
 let gameOver = false;
 let shootingSpeed = 5;
 let animateID = null;
-let shootingSpeedMax = 16;
+let shootingSpeedMax = 22;
 let explosions = [];
 
 let alienImage = new Image();
@@ -220,9 +220,9 @@ function gameLoop() {
     }
     
   });
-  context.fillStyle = "green";
+  context.fillStyle = "cyan";
   context.font = "24px Arial";
-  context.fillText("HP: " + playerHP, canvas.width - 100, 30);
+  context.fillText("Barrier HP: " + playerHP, canvas.width - 170, 30);
   explosions.forEach(function (explosion) {
     explosion.update();
   });
@@ -275,7 +275,7 @@ function gameLoop() {
       aliensWave3 = 0;
     }, 3000);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    alienSmallSpeed = 7;
+    alienSmallSpeed = 6;
     if (waveStarted && score >= 30 && score < 40) {
       context.fillStyle = "white";
       context.font = "48px Arial";
